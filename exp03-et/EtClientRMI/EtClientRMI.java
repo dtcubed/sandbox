@@ -13,14 +13,16 @@ public class EtClientRMI
     {
        ReceiveMessageInterface rmiServer;
        Registry registry;
-       /*
+       
        String serverAddress=args[0];
        String serverPort=args[1];
        String text=args[2];
-       */
-       String serverAddress="172.31.4.211";
+       
+       /*
+       String serverAddress="192.168.13.100";
        String serverPort="3232";
        String text="TEST from RMI Client";
+       */
        System.out.println("sending "+text+" to "+serverAddress+":"+serverPort);
        try{
            // get the registry 
@@ -32,7 +34,8 @@ public class EtClientRMI
            rmiServer=
               (ReceiveMessageInterface)(registry.lookup("rmiServer"));
            // call the remote method
-           rmiServer.receiveMessage(text);
+           // rmiServer.receiveMessage(text);
+           System.out.println("Echo back:[" + rmiServer.echoMsg(text) + "]");
        }
        catch(RemoteException e){
            e.printStackTrace();

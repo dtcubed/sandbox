@@ -11,14 +11,25 @@ import java.net.*;
 
 public class EtMiddlewareRMI extends java.rmi.server.UnicastRemoteObject
 		implements ReceiveMessageInterface {
+	
 	int thisPort;
 	String thisAddress;
 	Registry registry; // rmi registry for lookup the remote objects.
+	private String msg = "hello";
+	
+	public String echoMsg(String msg) throws RemoteException {
+		System.out.println("Got: [" + msg + "]");
+		return msg;
+	}
 
 	// This method is called from the remote client by the RMI.
 	// This is the implementation of the “ReceiveMessageInterface”.
 	public void receiveMessage(String x) throws RemoteException {
 		System.out.println(x);
+	}
+	
+	public String say() throws RemoteException {
+		return msg;
 	}
 
 	public EtMiddlewareRMI() throws RemoteException {
@@ -41,6 +52,7 @@ public class EtMiddlewareRMI extends java.rmi.server.UnicastRemoteObject
 
 	static public void main(String args[]) {
 		try {
+			@SuppressWarnings("unused")
 			EtMiddlewareRMI s = new EtMiddlewareRMI();
 		} catch (Exception e) {
 			e.printStackTrace();
