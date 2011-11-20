@@ -1,38 +1,47 @@
-/**
- ** Title:                EtClientGUI.java
- **/
-import javax.swing.*;
+import javax.swing.UIManager;
+import java.awt.*;
 
 public class EtClientGUI {
 
-	public static void main(String[] args) {
+    boolean packFrame = false;
 
-		int answer;
-		String msg;
+    /** Creates a new instance of Homework */
+    public EtClientGUI() {
+        JFrame1 frame = new JFrame1();
+        //Validate frames that have preset sizes
+        //Pack frames that have useful preferred size info, e.g. from their layout
+        if (packFrame) {
+            frame.pack();
+        } else {
+            frame.validate();
+        }
 
-		do {
+        //Center the window
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        Dimension frameSize = frame.getSize();
+        if (frameSize.height > screenSize.height) {
+            frameSize.height = screenSize.height;
+        }
 
-			// Determine whether the user wants to keep going or exit
-			// via the use of a JOptionPane. We'll give the user two (2) options
-			// and only exit the enclosing forever loop if they decide to
-			// "Stop".
-			Object[] opts = { "Continue Entering Expenses", "Stop" };
+        if (frameSize.width > screenSize.width) {
+            frameSize.width = screenSize.width;
+        }
 
-			answer = JOptionPane.showOptionDialog(null,
-					"Continue entering expenses or stop?",
-					"Expense Tracker GUI Client", JOptionPane.YES_NO_OPTION,
-					JOptionPane.INFORMATION_MESSAGE, null, opts, opts[0]);
+        frame.setLocation((screenSize.width - frameSize.width) / 2, (screenSize.height - frameSize.height) / 2);
+        frame.setVisible(true);
+    }
 
-			// If the user selected the "Stop" option, and integer value of
-			// "1" will be returned. In that case, break out of the enclosing
-			// "forever" loop. Otherwise, go through again.
-			if (answer == 1) {
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        // TODO code application logic here
 
-				break;
-			}
-
-		} while (true);
-	}
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        new EtClientGUI();
+    }
 }
-
-
