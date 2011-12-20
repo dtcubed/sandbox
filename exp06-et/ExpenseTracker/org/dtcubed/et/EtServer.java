@@ -16,36 +16,72 @@ public class EtServer extends java.rmi.server.UnicastRemoteObject
 	public String echoMsg(String msg) throws RemoteException {
 
 		System.out.println("Got: [" + msg + "]");
+		
+		if (msg.compareTo("STOP") == 0) {
+			
+			System.exit(0);
+		}
 		return msg;
 	}
 
-	public EtServer() throws RemoteException {
+	public EtServer(int portToListenOn) throws RemoteException {
+		
 		try {
 			// get the address of this host.
 			thisAddress = (InetAddress.getLocalHost()).toString();
-		} catch (Exception e) {
+		} 
+		catch (Exception e) {
+			
 			throw new RemoteException("can't get inet address.");
 		}
-		thisPort = 13131; // this port(registry’s port)
-		System.out.println("this address=" + thisAddress + ",port=" + thisPort);
+		
+		System.out.println("this address=" + thisAddress + ",port=" + portToListenOn);
+		
 		try {
+			
 			// create the registry and bind the name and object.
-			registry = LocateRegistry.createRegistry(thisPort);
+			registry = LocateRegistry.createRegistry(portToListenOn);
 			registry.rebind("rmiServer", this);
-		} catch (RemoteException e) {
+			
+		} 
+		catch (RemoteException e) {
+			
 			throw e;
 		}
 	}
 
 	static public void main(String args[]) {
 		
-		String myClassPath = System.getenv("CLASSPATH");
-		System.out.println("Value is: [" + myClassPath + "]");
+		int portToListenOn;
+		
+		String etServerPort = System.getenv("ET_SERVER_PORT");
+		
+		if (etServerPort == null) {
+			
+			etServerPort = "31313";
+			
+		}
+		
+		try {
+			
+			portToListenOn = Integer.parseInt(etServerPort);
+			
+			if ((portToListenOn < 0) || (portToListenOn > 65536)) {
+				
+				portToListenOn = (int) 31313;
+				
+			}
+		}
+		catch (Exception e) {
+			
+			portToListenOn = (int) 31313;
+		}
 
 		try {
 			@SuppressWarnings("unused")
-			EtServer etS = new EtServer();
-		} catch (Exception e) {
+			EtServer etS = new EtServer(portToListenOn);
+		} 
+		catch (Exception e) {
 			e.printStackTrace();
 			System.exit(1);
 		}

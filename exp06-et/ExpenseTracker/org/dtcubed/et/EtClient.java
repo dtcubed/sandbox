@@ -9,8 +9,7 @@ public class EtClient {
 	// EtServer connection details.
 	// private static String etServerIPAddress = ""; // Can be a hostname too.
 	// private static String etServerPort = "";
-	private static String etServerIPAddress = System
-			.getenv("ET_SERVER_IP_ADDRESS");
+	private static String etServerIPAddress = System.getenv("ET_SERVER_IP_ADDRESS");
 	private static String etServerPort = System.getenv("ET_SERVER_PORT");
 
 	// Components of an Expense message.
@@ -60,7 +59,7 @@ public class EtClient {
 		Registry registry;
 		String msg = "\n";
 
-		msg += "Sending: [" + note + "] To: [" + etServerIPAddress + ":"
+		msg += "Sent    : [" + note + "] To: [" + etServerIPAddress + ":"
 				+ etServerPort + "]";
 
 		System.out.println(msg);
@@ -72,7 +71,7 @@ public class EtClient {
 			// look up the remote object
 			etRmiServer = (EtMessageInterface) (registry.lookup("rmiServer"));
 			// call the remote method
-			System.out.println("Echo back:[" + etRmiServer.echoMsg(note) + "]");
+			System.out.println("Received: [" + etRmiServer.echoMsg(note) + "]");
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		} catch (NotBoundException e) {
