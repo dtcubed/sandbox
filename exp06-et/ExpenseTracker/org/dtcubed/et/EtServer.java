@@ -3,19 +3,19 @@ package org.dtcubed.et;
 import java.net.*;
 import java.rmi.*;
 import java.rmi.registry.*;
+import java.rmi.server.UnicastRemoteObject;
 
 
 @SuppressWarnings("serial")
-public class EtServer extends java.rmi.server.UnicastRemoteObject
-		implements EtMessageInterface {
+public class EtServer extends UnicastRemoteObject implements EtMessageInterface {
 	
 	int thisPort;
 	String thisAddress;
 	Registry registry; // rmi registry for lookup the remote objects.
 	
-	public String echoMsg(String msg) throws RemoteException {
+	public String processMessage(String msg) throws RemoteException {
 
-		System.out.println("Got: [" + msg + "]");
+		System.out.println("Processing: [" + msg + "]");
 		
 		if (msg.compareTo("STOP") == 0) {
 			
@@ -52,7 +52,7 @@ public class EtServer extends java.rmi.server.UnicastRemoteObject
 
 	static public void main(String args[]) {
 		
-		int portToListenOn;
+		int portToListenOn = (int) 31313;
 		
 		String etServerPort = System.getenv("ET_SERVER_PORT");
 		
@@ -66,15 +66,18 @@ public class EtServer extends java.rmi.server.UnicastRemoteObject
 			
 			portToListenOn = Integer.parseInt(etServerPort);
 			
-			if ((portToListenOn < 0) || (portToListenOn > 65536)) {
-				
-				portToListenOn = (int) 31313;
-				
-			}
 		}
 		catch (Exception e) {
 			
 			portToListenOn = (int) 31313;
+		}
+		finally {
+			
+			if ((portToListenOn < 0) || (portToListenOn > 65536)) {
+				
+				portToListenOn = (int) 31313;
+				
+			}		
 		}
 
 		try {

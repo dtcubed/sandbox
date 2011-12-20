@@ -7,24 +7,21 @@ import java.util.Scanner;
 public class EtClient {
 
 	// EtServer connection details.
-	// private static String etServerIPAddress = ""; // Can be a hostname too.
-	// private static String etServerPort = "";
 	private static String etServerIPAddress = System.getenv("ET_SERVER_IP_ADDRESS");
 	private static String etServerPort = System.getenv("ET_SERVER_PORT");
 
-	// Components of an Expense message.
-	// private static String account = "household"; // For portability between
-	// MSFT and UNIX, all lower-case.
+	// Components of an Expense message. 
+	// For portability between MSFT and UNIX, all lower-case.
 	private static String account = System.getenv("ET_ACCOUNT");
-	private static String amount = ""; // Insist on 2 decimal places.
-	private static String categoryCode = "000000000000000"; // "Uncategorized";
-	private static String dateIncurred = ""; // Format: YYYYMMDD
-	private static String note = "Maximum of 255 characters"; // Maximum: 255
-	// characters.
-	// Disallow any
-	// downstream
-	// delimiters.
-	// private static String password = ""; // SHA-2 Hash of cleartext.
+	// Insist on 2 decimal places.
+	private static String amount = ""; 
+	// "Uncategorized";
+	private static String categoryCode = "000000000000000"; 
+	// Format: YYYYMMDD
+	private static String dateIncurred = ""; 	
+	// Maximum of 255 characters. Dis-allow any downstream delimiters.
+	private static String note = "Maximum of 255 characters"; 
+	// SHA-2 Hash of cleartext.
 	private static String password = System.getenv("ET_ACCOUNT_PASSWORD");
 
 	private static void printMenu() {
@@ -57,9 +54,19 @@ public class EtClient {
 
 		EtMessageInterface etRmiServer;
 		Registry registry;
+		String expenseMessage = "";
 		String msg = "\n";
+		
+		expenseMessage += account + "," + password + "," + amount + ",";
+		expenseMessage += dateIncurred + "," + categoryCode + "," + note;
+		
+		// Contruct a "special" message to cause the Server side to exit.
+		if (note.compareTo("STOP") == 0) {
+			
+			expenseMessage = "STOP";
+		}
 
-		msg += "Sent    : [" + note + "] To: [" + etServerIPAddress + ":"
+		msg += "Sending : [" + expenseMessage + "]\nTo: [" + etServerIPAddress + ":"
 				+ etServerPort + "]";
 
 		System.out.println(msg);
@@ -71,10 +78,12 @@ public class EtClient {
 			// look up the remote object
 			etRmiServer = (EtMessageInterface) (registry.lookup("rmiServer"));
 			// call the remote method
-			System.out.println("Received: [" + etRmiServer.echoMsg(note) + "]");
-		} catch (RemoteException e) {
+			System.out.println("Received: [" + etRmiServer.processMessage(expenseMessage) + "]");
+		} 
+		catch (RemoteException e) {
 			e.printStackTrace();
-		} catch (NotBoundException e) {
+		} 
+		catch (NotBoundException e) {
 			e.printStackTrace();
 		}
 	}
