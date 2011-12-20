@@ -21,6 +21,15 @@ public class EtServer extends UnicastRemoteObject implements EtMessageInterface 
 			
 			System.exit(0);
 		}
+		
+		// Split the message into "tokens" using a comma as a delimiter.
+		String[] token = msg.split(",");
+		System.out.println("Amount: [" + token[2] + "]");
+		boolean retVal = EtDataCheck.isValidAmount(token[2]);
+		System.out.println("RetVal: [" + retVal + "]");
+		System.out.println("Date: [" + token[3] + "]");
+		retVal = EtDataCheck.isValidYYYYMMDD(token[3]);
+		System.out.println("RetVal: [" + retVal + "]");
 		return msg;
 	}
 
