@@ -5,6 +5,8 @@ import java.rmi.*;
 import java.rmi.registry.*;
 import java.rmi.server.UnicastRemoteObject;
 
+import org.dtcubed.et.EtDatabase;
+
 
 @SuppressWarnings("serial")
 public class EtServer extends UnicastRemoteObject implements EtMessageInterface {
@@ -30,6 +32,13 @@ public class EtServer extends UnicastRemoteObject implements EtMessageInterface 
 		System.out.println("Date: [" + token[3] + "]");
 		retVal = EtDataCheck.isValidYYYYMMDD(token[3]);
 		System.out.println("RetVal: [" + retVal + "]");
+		
+		try {
+			EtDatabase.createEtDatabase();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return msg;
 	}
 

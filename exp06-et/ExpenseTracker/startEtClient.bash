@@ -1,5 +1,13 @@
 #!/usr/bin/bash
 
+
+export ET_ACCOUNT=household
+export ET_ACCOUNT_PASSWORD=sshsha2hashssh
+
+export ET_SERVER_IP_ADDRESS=192.168.237.1
+export ET_SERVER_PORT=5555
+
+
 #####
 # Path(s) to External Jar(s)
 #####
