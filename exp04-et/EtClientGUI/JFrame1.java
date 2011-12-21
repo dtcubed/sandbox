@@ -10,7 +10,7 @@
  */
 /**
  *
- * @author dworden
+ * @author dtcubed
  */
 public class JFrame1 extends javax.swing.JFrame {
     
