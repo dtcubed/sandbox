@@ -4,6 +4,8 @@ import java.rmi.*;
 import java.rmi.registry.*;
 import java.util.Scanner;
 
+import org.dtcubed.et.EtCrypto;
+
 public class EtClient {
 
 	// EtServer connection details.
@@ -29,6 +31,7 @@ public class EtClient {
 		String msg = "\n";
 
 		msg += "-----------------------------------------------------\n";
+		/*
 		msg += "--------- Account Information -----------------------\n";
 		msg += "-----------------------------------------------------\n";
 		msg += "1) Account      : [" + account + "]\n";
@@ -41,9 +44,11 @@ public class EtClient {
 		msg += "a) Amount       : [" + amount + "]\n";
 		msg += "c) Category Code: [" + categoryCode + "]\n";
 		msg += "d) Date Incurred: [" + dateIncurred + "]\n";
+		*/
 		msg += "n) Note         : [" + note + "]\n";
 		msg += "-----------------------------------------------------\n";
-		msg += "e) EXIT         s) SUBMIT\n\n";
+		msg += "e) EXIT         s) SUBMIT\n";
+		msg += "y) SHA-1 Note   z) Encrypt Note\n";
 		msg += "Command         : ";
 
 		System.out.print(msg);
@@ -94,6 +99,7 @@ public class EtClient {
 		boolean keepGoing = true;
 		char inputChar = 'x';
 		Scanner scan = new Scanner(System.in);
+		String tempRetValue = "";
 
 		// Set values via Environment Variables if appropriate.
 
@@ -156,6 +162,15 @@ public class EtClient {
 				case 's':
 				case 'S':
 					submitExpense();
+					break;
+				case 'y':
+				case 'Y':
+					tempRetValue = EtCrypto.sha1digest(note);
+					System.out.print("\nSHA1: [" + tempRetValue + "]\n");
+					break;
+				case 'z':
+				case 'Z':
+					tempRetValue = EtCrypto.p2c(note);
 					break;
 				default:
 					break;
