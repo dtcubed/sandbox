@@ -1,0 +1,17 @@
+Record format(s):
+
+----------------
+INSERT expense
+----------------
+OSD,ACCT,SD,AMT,DI,CC,NOTE
+
+Where:
+------
+OSD  - overall SHA digest for rest of record (probably start with SHA-1)
+ACCT - account to INSERT
+SD   - SHA-1 digest (one-way password for ACCT)
+AMT  - amount (passes Data Checks)
+DI   - date expense was incurred (passes Data Checks)
+CC   - category code (passes Data Checks)
+NOTE - free form textual note (can't contain any delimiters)
+
