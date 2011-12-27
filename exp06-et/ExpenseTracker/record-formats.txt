@@ -3,15 +3,32 @@ Record format(s):
 ----------------
 INSERT expense
 ----------------
-OSD,ACCT,SD,AMT,DI,CC,NOTE
+OSD,IE,ACCT,SD,AMT,DI,CC,NOTE
 
 Where:
 ------
 OSD  - overall SHA digest for rest of record (probably start with SHA-1)
+IE   - INSERT expense
 ACCT - account to INSERT
 SD   - SHA-1 digest (one-way password for ACCT)
 AMT  - amount (passes Data Checks)
 DI   - date expense was incurred (passes Data Checks)
 CC   - category code (passes Data Checks)
 NOTE - free form textual note (can't contain any delimiters)
+
+--------------------
+ADMIN create etdb
+--------------------
+OSD,ADMIN,SD,CETDB,ACCT
+
+Where:
+------
+OSD   - overall SHA digest for rest of record (probably start with SHA-1)
+ADMIN - indicating an ADMIN (privileged command)
+SD    - SHA-1 digest (one-way password for "admin" ACCT)
+CETDB - create expense tracker database
+ACCT  - account create an expense tracker database for
+
+
+
 

@@ -46,13 +46,46 @@ public class EtClient {
 		msg += "n) Note         : [" + note + "]\n";
 		msg += "-----------------------------------------------------\n";
 		msg += "e) EXIT         s) SUBMIT\n";
-		msg += "y) SHA-1 Note   z) Encrypt Note\n";
+		msg += "y) Create ET DB\n";
 		msg += "Command         : ";
 
 		System.out.print(msg);
 
 	}
 
+	
+	private static void createEtDb() {
+
+		EtMessageInterface etRmiServer;
+		Registry registry;
+		String msg = "";
+		String retStr = "";
+		String tempMsg = "ADMIN," + password + ",CETDB," + account;
+		
+		
+		msg = EtCrypto.sha1digest(password);
+		msg += "," + tempMsg;
+
+		System.out.println("Sending : [" + msg + "]\n");
+
+		try {
+			// get the registry
+			registry = LocateRegistry.getRegistry(etServerIPAddress,
+					(new Integer(etServerPort)).intValue());
+			// look up the remote object
+			etRmiServer = (EtMessageInterface) (registry.lookup("rmiServer"));
+			// call the remote method
+			retStr = etRmiServer.processMessage(msg);
+			System.out.println("Received: [" + retStr + "] from RMI server");
+		} 
+		catch (RemoteException e) {
+			e.printStackTrace();
+		} 
+		catch (NotBoundException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	private static void submitExpense() {
 
 		EtMessageInterface etRmiServer;
@@ -193,6 +226,7 @@ public class EtClient {
 				case '4':
 					System.out.print("Password: ");
 					password = scan.nextLine();
+					password = EtCrypto.sha1digest(password);
 					break;
 				case 'a':
 				case 'A':
@@ -225,12 +259,10 @@ public class EtClient {
 					break;
 				case 'y':
 				case 'Y':
-					tempRetValue = EtCrypto.sha1digest(note);
-					System.out.print("\nSHA1: [" + tempRetValue + "]\n");
+					createEtDb();
 					break;
 				case 'z':
 				case 'Z':
-					zEncryptNote();
 					break;
 				default:
 					break;
