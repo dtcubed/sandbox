@@ -170,7 +170,11 @@ public class EtClient {
 					break;
 				case 'z':
 				case 'Z':
-					tempRetValue = EtCrypto.p2c(note);
+			        String passphrase = "The quick brown fox jumped over the lazy brown dog";
+					tempRetValue = EtCrypto.p2chex(passphrase, note);	
+					System.out.print("\nP2C: [" + tempRetValue + "]\n");
+					tempRetValue = EtCrypto.chex2p(passphrase, tempRetValue);
+					System.out.print("\nPlaintext: [" + tempRetValue + "]\n");					
 					break;
 				default:
 					break;
