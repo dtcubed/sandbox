@@ -48,8 +48,7 @@ public class EtCrypto {
 			System.out.print("03  ");
 			
 			plainText = EtCrypto.decrypt(passphrase, cipherTextByteArray);
-			
-			
+					
 			System.out.print("04  ");
 			
 		}

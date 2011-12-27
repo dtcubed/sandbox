@@ -31,7 +31,6 @@ public class EtClient {
 		String msg = "\n";
 
 		msg += "-----------------------------------------------------\n";
-		/*
 		msg += "--------- Account Information -----------------------\n";
 		msg += "-----------------------------------------------------\n";
 		msg += "1) Account      : [" + account + "]\n";
@@ -44,7 +43,6 @@ public class EtClient {
 		msg += "a) Amount       : [" + amount + "]\n";
 		msg += "c) Category Code: [" + categoryCode + "]\n";
 		msg += "d) Date Incurred: [" + dateIncurred + "]\n";
-		*/
 		msg += "n) Note         : [" + note + "]\n";
 		msg += "-----------------------------------------------------\n";
 		msg += "e) EXIT         s) SUBMIT\n";
@@ -91,6 +89,68 @@ public class EtClient {
 		catch (NotBoundException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private static void zEncryptNote() {
+
+		EtMessageInterface etRmiServer;
+		Registry registry;
+		String passphrase = "The quick brown fox jumped over the lazy brown dog";
+		String msg = "";
+		
+		
+		msg = "Client Side, encrypting: [" + note + "]";
+		System.out.println(msg);
+		
+		String chexStr = EtCrypto.p2chex(passphrase, note);
+		
+		msg = "Client Side, sending this cipher hex: [" + chexStr + "]";
+		System.out.println(msg);
+		
+		try {
+			// get the registry
+			registry = LocateRegistry.getRegistry(etServerIPAddress,
+					(new Integer(etServerPort)).intValue());
+			// look up the remote object
+			etRmiServer = (EtMessageInterface) (registry.lookup("rmiServer"));
+			// call the remote method
+			String clearText = etRmiServer.processCipherHex(chexStr);
+			System.out.println("Received: [" + clearText + "]");
+		} 
+		catch (RemoteException e) {
+			e.printStackTrace();
+		} 
+		catch (NotBoundException e) {
+			e.printStackTrace();
+		}
+		
+		
+		/*
+		msg += "Sending : [" + expenseMessage + "]\nTo: [" + etServerIPAddress + ":"
+				+ etServerPort + "]";
+
+		try {
+			// get the registry
+			registry = LocateRegistry.getRegistry(etServerIPAddress,
+					(new Integer(etServerPort)).intValue());
+			// look up the remote object
+			etRmiServer = (EtMessageInterface) (registry.lookup("rmiServer"));
+			// call the remote method
+			System.out.println("Received: [" + etRmiServer.processMessage(expenseMessage) + "]");
+		} 
+		catch (RemoteException e) {
+			e.printStackTrace();
+		} 
+		catch (NotBoundException e) {
+			e.printStackTrace();
+		}
+        
+		tempRetValue = EtCrypto.p2chex(passphrase, note);	
+		System.out.print("\nP2C: [" + tempRetValue + "]\n");
+		tempRetValue = EtCrypto.chex2p(passphrase, tempRetValue);
+		System.out.print("\nPlaintext: [" + tempRetValue + "]\n");					
+		break;
+		*/
 	}
 
 	public static void main(String[] args) {
@@ -170,11 +230,7 @@ public class EtClient {
 					break;
 				case 'z':
 				case 'Z':
-			        String passphrase = "The quick brown fox jumped over the lazy brown dog";
-					tempRetValue = EtCrypto.p2chex(passphrase, note);	
-					System.out.print("\nP2C: [" + tempRetValue + "]\n");
-					tempRetValue = EtCrypto.chex2p(passphrase, tempRetValue);
-					System.out.print("\nPlaintext: [" + tempRetValue + "]\n");					
+					zEncryptNote();
 					break;
 				default:
 					break;

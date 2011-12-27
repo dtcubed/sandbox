@@ -5,6 +5,7 @@ import java.rmi.*;
 import java.rmi.registry.*;
 import java.rmi.server.UnicastRemoteObject;
 
+import org.dtcubed.et.EtCrypto;
 import org.dtcubed.et.EtDatabase;
 
 
@@ -14,6 +15,16 @@ public class EtServer extends UnicastRemoteObject implements EtMessageInterface 
 	int thisPort;
 	String thisAddress;
 	Registry registry; // rmi registry for lookup the remote objects.
+	
+	public String processCipherHex(String msg) throws RemoteException {
+		
+		System.out.println("Processing: [" + msg + "]");
+		String passphrase = "The quick brown fox jumped over the lazy brown dog";
+		
+		String plainText = EtCrypto.chex2p(passphrase, msg);
+		
+		return plainText;
+	}
 	
 	public String processMessage(String msg) throws RemoteException {
 
