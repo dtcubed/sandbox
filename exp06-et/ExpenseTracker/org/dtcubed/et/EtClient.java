@@ -25,36 +25,53 @@ public class EtClient {
 	private static String note = "Maximum of 255 characters"; 
 	// SHA-2 Hash of cleartext.
 	private static String password = System.getenv("ET_ACCOUNT_PASSWORD");
-
-	private static void printMenu() {
-
-		String msg = "\n";
-
-		msg += "-----------------------------------------------------\n";
-		msg += "--------- Account Information -----------------------\n";
-		msg += "-----------------------------------------------------\n";
-		msg += "1) Account      : [" + account + "]\n";
-		msg += "2) EtServer IP  : [" + etServerIPAddress + "]\n";
-		msg += "3) EtServer Port: [" + etServerPort + "]\n";
-		msg += "4) Password     : [" + password + "]\n";
-		msg += "-----------------------------------------------------\n";
-		msg += "--------- Expense Information------------------------\n";
-		msg += "-----------------------------------------------------\n";
-		msg += "a) Amount       : [" + amount + "]\n";
-		msg += "c) Category Code: [" + categoryCode + "]\n";
-		msg += "d) Date Incurred: [" + dateIncurred + "]\n";
-		msg += "n) Note         : [" + note + "]\n";
-		msg += "-----------------------------------------------------\n";
-		msg += "e) EXIT         s) SUBMIT\n";
-		msg += "y) Create ET DB\n";
-		msg += "Command         : ";
-
-		System.out.print(msg);
-
-	}
-
 	
-	private static void createEtDb() {
+	private static void createEtAdminDb() {
+
+		EtMessageInterface etRmiServer;
+		Registry registry;
+
+		try {
+			// get the registry
+			registry = LocateRegistry.getRegistry(etServerIPAddress,
+					(new Integer(etServerPort)).intValue());
+			// look up the remote object
+			etRmiServer = (EtMessageInterface) (registry.lookup("rmiServer"));
+			// call the remote method
+			etRmiServer.createEtAdminDb();
+		} 
+		catch (RemoteException e) {
+			e.printStackTrace();
+		} 
+		catch (NotBoundException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private static void createEtDb(String basename) {
+
+		EtMessageInterface etRmiServer;
+		Registry registry;
+
+		try {
+			// get the registry
+			registry = LocateRegistry.getRegistry(etServerIPAddress,
+					(new Integer(etServerPort)).intValue());
+			// look up the remote object
+			etRmiServer = (EtMessageInterface) (registry.lookup("rmiServer"));
+			// call the remote method
+			etRmiServer.createEtDb(basename);
+		} 
+		catch (RemoteException e) {
+			e.printStackTrace();
+		} 
+		catch (NotBoundException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@SuppressWarnings("unused")
+	private static void createEtDbOldOld() {
 
 		EtMessageInterface etRmiServer;
 		Registry registry;
@@ -86,6 +103,55 @@ public class EtClient {
 		}
 	}
 	
+	private static void printMenu() {
+
+		String msg = "\n";
+
+		msg += "-----------------------------------------------------\n";
+		msg += "--------- Account Information -----------------------\n";
+		msg += "-----------------------------------------------------\n";
+		msg += "1) Account      : [" + account + "]\n";
+		msg += "2) EtServer IP  : [" + etServerIPAddress + "]\n";
+		msg += "3) EtServer Port: [" + etServerPort + "]\n";
+		msg += "4) Password     : [" + password + "]\n";
+		msg += "5) CreateEtAdminDb    6) CreateEtDb    7) STOP SRVR \n";
+		msg += "-----------------------------------------------------\n";
+		msg += "--------- Expense Information------------------------\n";
+		msg += "-----------------------------------------------------\n";
+		msg += "a) Amount       : [" + amount + "]\n";
+		msg += "c) Category Code: [" + categoryCode + "]\n";
+		msg += "d) Date Incurred: [" + dateIncurred + "]\n";
+		msg += "n) Note         : [" + note + "]\n";
+		msg += "-----------------------------------------------------\n";
+		msg += "e) EXIT         s) SUBMIT\n";
+		msg += "Command         : ";
+
+		System.out.print(msg);
+
+	}
+	
+	private static void stopServer() {
+
+		EtMessageInterface etRmiServer;
+		Registry registry;
+
+		try {
+			// get the registry
+			registry = LocateRegistry.getRegistry(etServerIPAddress,
+					(new Integer(etServerPort)).intValue());
+			// look up the remote object
+			etRmiServer = (EtMessageInterface) (registry.lookup("rmiServer"));
+			// call the remote method
+			etRmiServer.stopServer();
+		} 
+		catch (RemoteException e) {
+			e.printStackTrace();
+		} 
+		catch (NotBoundException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	private static void submitExpense() {
 
 		EtMessageInterface etRmiServer;
@@ -95,12 +161,6 @@ public class EtClient {
 		
 		expenseMessage += account + "," + password + "," + amount + ",";
 		expenseMessage += dateIncurred + "," + categoryCode + "," + note;
-		
-		// Contruct a "special" message to cause the Server side to exit.
-		if (note.compareTo("STOP") == 0) {
-			
-			expenseMessage = "STOP";
-		}
 
 		msg += "Sending : [" + expenseMessage + "]\nTo: [" + etServerIPAddress + ":"
 				+ etServerPort + "]";
@@ -123,7 +183,7 @@ public class EtClient {
 			e.printStackTrace();
 		}
 	}
-	
+	/*
 	private static void zEncryptNote() {
 
 		EtMessageInterface etRmiServer;
@@ -158,7 +218,7 @@ public class EtClient {
 		}
 		
 		
-		/*
+		
 		msg += "Sending : [" + expenseMessage + "]\nTo: [" + etServerIPAddress + ":"
 				+ etServerPort + "]";
 
@@ -183,8 +243,9 @@ public class EtClient {
 		tempRetValue = EtCrypto.chex2p(passphrase, tempRetValue);
 		System.out.print("\nPlaintext: [" + tempRetValue + "]\n");					
 		break;
-		*/
+		
 	}
+	*/
 
 	public static void main(String[] args) {
 
@@ -192,7 +253,6 @@ public class EtClient {
 		boolean keepGoing = true;
 		char inputChar = 'x';
 		Scanner scan = new Scanner(System.in);
-		String tempRetValue = "";
 
 		// Set values via Environment Variables if appropriate.
 
@@ -228,6 +288,15 @@ public class EtClient {
 					password = scan.nextLine();
 					password = EtCrypto.sha1digest(password);
 					break;
+				case '5':
+					createEtAdminDb();
+					break;
+				case '6':
+					createEtDb(account);
+					break;
+				case '7':
+					stopServer();
+					break;
 				case 'a':
 				case 'A':
 					System.out.print("Amount: ");
@@ -256,10 +325,6 @@ public class EtClient {
 				case 's':
 				case 'S':
 					submitExpense();
-					break;
-				case 'y':
-				case 'Y':
-					createEtDb();
 					break;
 				case 'z':
 				case 'Z':

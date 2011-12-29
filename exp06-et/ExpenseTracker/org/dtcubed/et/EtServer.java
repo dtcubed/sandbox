@@ -16,6 +16,26 @@ public class EtServer extends UnicastRemoteObject implements EtMessageInterface 
 	String thisAddress;
 	Registry registry; // rmi registry for lookup the remote objects.
 	
+	public void createEtAdminDb() throws RemoteException {
+		
+		try {
+			EtDatabase.createEtAdminDatabase();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void createEtDb(String basename) throws RemoteException {
+		
+		try {
+			EtDatabase.createEtDatabase(basename);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public String processCipherHex(String msg) throws RemoteException {
 		
 		System.out.println("Processing: [" + msg + "]");
@@ -30,11 +50,6 @@ public class EtServer extends UnicastRemoteObject implements EtMessageInterface 
 
 		System.out.println("Processing: [" + msg + "]");
 		
-		if (msg.compareTo("STOP") == 0) {
-			
-			System.exit(0);
-		}
-		
 		// Split the message into "tokens" using a comma as a delimiter.
 		String[] token = msg.split(",");
 		System.out.println("Amount: [" + token[2] + "]");
@@ -44,13 +59,14 @@ public class EtServer extends UnicastRemoteObject implements EtMessageInterface 
 		retVal = EtDataCheck.isValidYYYYMMDD(token[3]);
 		System.out.println("RetVal: [" + retVal + "]");
 		
-		try {
-			EtDatabase.createEtDatabase();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		return msg;
+	}
+	
+	public void stopServer() throws RemoteException {
+
+		System.out.println("STOPPING SERVER");
+		
+		System.exit(0);
 	}
 
 	public EtServer(int portToListenOn) throws RemoteException {

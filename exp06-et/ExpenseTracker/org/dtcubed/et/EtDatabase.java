@@ -8,7 +8,108 @@ import java.sql.Statement;
 
 public class EtDatabase {
 	
-	public static void createEtDatabase() throws ClassNotFoundException {
+	private static final String etdbsSubdir = "etdbs/";
+	
+	
+	public static void createEtAdminDatabase() throws ClassNotFoundException {
+				
+		String connectString = "jdbc:sqlite:" + etdbsSubdir + "admin.db";
+			
+		// load the sqlite-JDBC driver using the current class loader
+		Class.forName("org.sqlite.JDBC");
+
+		Connection connection = null;
+		String sql = "";
+		
+		try {
+			// create a database connection
+			connection = DriverManager.getConnection(connectString);
+			Statement statement = connection.createStatement();
+			statement.setQueryTimeout(30); // set timeout to 30 sec.
+			
+			sql  = "DROP TABLE IF EXISTS expense";
+			
+			statement.executeUpdate(sql);
+			
+			sql =  "CREATE TABLE expense ";		
+			sql += "(id INTEGER PRIMARY KEY AUTOINCREMENT, ";
+	        sql += "incurred_date TEXT NOT NULL, ";
+	        sql += "amount REAL NOT NULL, ";
+	        sql += "category_code TEXT NOT NULL, ";
+	        sql += "desc TEXT NOT NULL)";
+	        
+			statement.executeUpdate(sql);
+
+		} catch (SQLException e) {
+			// if the error message is "out of memory",
+			// it probably means no database file is found
+			System.err.println(e.getMessage());
+		} finally {
+			try {
+				if (connection != null)
+					connection.close();
+			} catch (SQLException e) {
+				// connection close failed.
+				System.err.println(e);
+			}
+		}
+	}
+		
+	public static void createEtDatabase(String basename) throws ClassNotFoundException {
+		
+		// The "admin" database is special in our application. 
+		// Don't allow creation here.
+		if (basename.compareToIgnoreCase("admin") == 0) {
+			
+			String msg = "Can not deal with admin databases, returning now.";
+			System.out.println(msg);
+			return;
+		}
+		
+		String connectString = "jdbc:sqlite:" + etdbsSubdir + basename + ".db";
+			
+		// load the sqlite-JDBC driver using the current class loader
+		Class.forName("org.sqlite.JDBC");
+
+		Connection connection = null;
+		String sql = "";
+		
+		try {
+			// create a database connection
+			// connection = DriverManager.getConnection("jdbc:sqlite:expensetracker.db");
+			connection = DriverManager.getConnection(connectString);
+			Statement statement = connection.createStatement();
+			statement.setQueryTimeout(30); // set timeout to 30 sec.
+			
+			sql  = "DROP TABLE IF EXISTS expense";
+			
+			statement.executeUpdate(sql);
+			
+			sql =  "CREATE TABLE expense ";		
+			sql += "(id INTEGER PRIMARY KEY AUTOINCREMENT, ";
+	        sql += "incurred_date TEXT NOT NULL, ";
+	        sql += "amount REAL NOT NULL, ";
+	        sql += "category_code TEXT NOT NULL, ";
+	        sql += "desc TEXT NOT NULL)";
+	        
+			statement.executeUpdate(sql);
+
+		} catch (SQLException e) {
+			// if the error message is "out of memory",
+			// it probably means no database file is found
+			System.err.println(e.getMessage());
+		} finally {
+			try {
+				if (connection != null)
+					connection.close();
+			} catch (SQLException e) {
+				// connection close failed.
+				System.err.println(e);
+			}
+		}
+	}
+	
+	public static void createEtDatabaseOld() throws ClassNotFoundException {
 		// load the sqlite-JDBC driver using the current class loader
 		Class.forName("org.sqlite.JDBC");
 
