@@ -16,10 +16,10 @@ public class EtServer extends UnicastRemoteObject implements EtMessageInterface 
 	String thisAddress;
 	Registry registry; // rmi registry for lookup the remote objects.
 	
-	public void createEtAdminDb() throws RemoteException {
+	public void createEtAdminDb(String adminPassword) throws RemoteException {
 		
 		try {
-			EtDatabase.createEtAdminDatabase();
+			EtDatabase.createEtAdminDatabase(adminPassword);
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

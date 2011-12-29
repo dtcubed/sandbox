@@ -27,7 +27,9 @@ public class EtClient {
 	// private static String password = System.getenv("ET_ACCOUNT_PASSWORD");
 	private static String password = EtCrypto.sha1digest(System.getenv("ET_ACCOUNT_PASSWORD"));
 	
-	private static void createEtAdminDb() {
+	private static String adminPassword = EtCrypto.sha1digest(System.getenv("ET_ADMIN_PASSWORD"));
+	
+	private static void createEtAdminDb(String adminPassword) {
 
 		EtMessageInterface etRmiServer;
 		Registry registry;
@@ -39,7 +41,7 @@ public class EtClient {
 			// look up the remote object
 			etRmiServer = (EtMessageInterface) (registry.lookup("rmiServer"));
 			// call the remote method
-			etRmiServer.createEtAdminDb();
+			etRmiServer.createEtAdminDb(adminPassword);
 		} 
 		catch (RemoteException e) {
 			e.printStackTrace();
@@ -116,6 +118,7 @@ public class EtClient {
 		msg += "3) EtServer Port: [" + etServerPort + "]\n";
 		msg += "4) Password     : [" + password + "]\n";
 		msg += "5) CreateEtAdminDb    6) CreateEtDb    7) STOP SRVR \n";
+		msg += "8) Admin Password: [" + adminPassword + "]\n";
 		msg += "-----------------------------------------------------\n";
 		msg += "--------- Expense Information------------------------\n";
 		msg += "-----------------------------------------------------\n";
@@ -291,13 +294,18 @@ public class EtClient {
 					password = EtCrypto.sha1digest(password);
 					break;
 				case '5':
-					createEtAdminDb();
+					createEtAdminDb(adminPassword);
 					break;
 				case '6':
 					createEtDb(account);
 					break;
 				case '7':
 					stopServer();
+					break;
+				case '8':
+					System.out.print("Admin Password: ");
+					adminPassword = scan.nextLine();
+					adminPassword = EtCrypto.sha1digest(adminPassword);
 					break;
 				case 'a':
 				case 'A':

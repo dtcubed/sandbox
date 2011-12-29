@@ -9,9 +9,8 @@ import java.sql.Statement;
 public class EtDatabase {
 	
 	private static final String etdbsSubdir = "etdbs/";
-	
-	
-	public static void createEtAdminDatabase() throws ClassNotFoundException {
+		
+	public static void createEtAdminDatabase(String adminPassword) throws ClassNotFoundException {
 				
 		String connectString = "jdbc:sqlite:" + etdbsSubdir + "admin.db";
 			
@@ -27,18 +26,35 @@ public class EtDatabase {
 			Statement statement = connection.createStatement();
 			statement.setQueryTimeout(30); // set timeout to 30 sec.
 			
-			sql  = "DROP TABLE IF EXISTS expense";
+			sql  = "DROP TABLE IF EXISTS info";
 			
 			statement.executeUpdate(sql);
 			
-			sql =  "CREATE TABLE expense ";		
+			sql =  "CREATE TABLE info ";		
 			sql += "(id INTEGER PRIMARY KEY AUTOINCREMENT, ";
-	        sql += "incurred_date TEXT NOT NULL, ";
-	        sql += "amount REAL NOT NULL, ";
-	        sql += "category_code TEXT NOT NULL, ";
-	        sql += "desc TEXT NOT NULL)";
+	        sql += "password_digest TEXT NOT NULL)";
 	        
 			statement.executeUpdate(sql);
+			
+			sql =  "INSERT INTO info VALUES(1, '" + adminPassword + "')";
+			
+			// sql =  "INSERT INTO info VALUES password_digest ('" + adminPassword + "')";
+			statement.executeUpdate(sql);
+			
+			
+			sql =  "INSERT INTO info VALUES(2, '" + adminPassword + "')";			
+			statement.executeUpdate(sql);
+			
+			sql =  "INSERT INTO info VALUES(3, '" + adminPassword + "')";			
+			statement.executeUpdate(sql);
+			
+			/*			
+			sql =  "INSERT INTO info VALUES password_digest ('02')";
+			statement.executeUpdate(sql);
+			
+			sql =  "INSERT INTO info VALUES password_digest ('03')";
+			statement.executeUpdate(sql);
+			*/
 
 		} catch (SQLException e) {
 			// if the error message is "out of memory",

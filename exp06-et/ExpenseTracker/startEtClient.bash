@@ -1,5 +1,6 @@
 #!/usr/bin/bash
 
+export ET_ADMIN_PASSWORD=test
 
 export ET_ACCOUNT=household
 export ET_ACCOUNT_PASSWORD=sshsha2hashssh
