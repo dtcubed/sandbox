@@ -16,15 +16,16 @@ public class EtClient {
 	// For portability between MSFT and UNIX, all lower-case.
 	private static String account = System.getenv("ET_ACCOUNT");
 	// Insist on 2 decimal places.
-	private static String amount = ""; 
+	private static String amount = "13.13"; 
 	// "Uncategorized";
 	private static String categoryCode = "000000000000000"; 
 	// Format: YYYYMMDD
-	private static String dateIncurred = ""; 	
+	private static String dateIncurred = "20111230"; 	
 	// Maximum of 255 characters. Dis-allow any downstream delimiters.
 	private static String note = "Maximum of 255 characters"; 
 	// SHA-2 Hash of cleartext.
-	private static String password = System.getenv("ET_ACCOUNT_PASSWORD");
+	// private static String password = System.getenv("ET_ACCOUNT_PASSWORD");
+	private static String password = EtCrypto.sha1digest(System.getenv("ET_ACCOUNT_PASSWORD"));
 	
 	private static void createEtAdminDb() {
 
@@ -153,19 +154,18 @@ public class EtClient {
 	}
 	
 	private static void submitExpense() {
-
+		
 		EtMessageInterface etRmiServer;
 		Registry registry;
-		String expenseMessage = "";
-		String msg = "\n";
+		String msg = "";
+		String retStr = "";
+		String tempMsg = "IE," + account + "," + password + "," + amount + 
+		                 "," + dateIncurred + "," + categoryCode + "," + note;
 		
-		expenseMessage += account + "," + password + "," + amount + ",";
-		expenseMessage += dateIncurred + "," + categoryCode + "," + note;
+		msg =  EtCrypto.sha1digest(tempMsg) + ",";
+		msg += tempMsg;
 
-		msg += "Sending : [" + expenseMessage + "]\nTo: [" + etServerIPAddress + ":"
-				+ etServerPort + "]";
-
-		System.out.println(msg);
+		System.out.println("Sending : [" + msg + "]");
 
 		try {
 			// get the registry
@@ -174,7 +174,9 @@ public class EtClient {
 			// look up the remote object
 			etRmiServer = (EtMessageInterface) (registry.lookup("rmiServer"));
 			// call the remote method
-			System.out.println("Received: [" + etRmiServer.processMessage(expenseMessage) + "]");
+			retStr = etRmiServer.processMessage(msg);
+			// print out the returned string
+			System.out.println("Received: [" + retStr + "]");
 		} 
 		catch (RemoteException e) {
 			e.printStackTrace();

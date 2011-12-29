@@ -50,6 +50,26 @@ public class EtServer extends UnicastRemoteObject implements EtMessageInterface 
 
 		System.out.println("Processing: [" + msg + "]");
 		
+		// Ciphertext to plaintext here.
+		
+		// Split into 2 parts, using comma as the delimiter.
+		String[] part = msg.split(",", 2);
+		
+		// After the split, part 0 contains the sha1 digest part 1
+		System.out.println("Part 0: [" + part[0] + "]");
+		System.out.println("Part 1: [" + part[1] + "]");
+		
+		String serverSideDigest = EtCrypto.sha1digest(part[1]);
+				
+		// If the digests don't compare, return.
+		if (serverSideDigest.compareTo(part[0]) != 0) {
+			
+			// throw new RemoteException("this should never happen");
+			return "digest mis-compare";
+		}
+		
+		/*
+		
 		// Split the message into "tokens" using a comma as a delimiter.
 		String[] token = msg.split(",");
 		System.out.println("Amount: [" + token[2] + "]");
@@ -57,9 +77,10 @@ public class EtServer extends UnicastRemoteObject implements EtMessageInterface 
 		System.out.println("RetVal: [" + retVal + "]");
 		System.out.println("Date: [" + token[3] + "]");
 		retVal = EtDataCheck.isValidYYYYMMDD(token[3]);
-		System.out.println("RetVal: [" + retVal + "]");
-		
+		System.out.println("RetVal: [" + retVal + "]");		
 		return msg;
+		*/
+		return "OK";
 	}
 	
 	public void stopServer() throws RemoteException {
