@@ -48,9 +48,9 @@ public class EtServer extends UnicastRemoteObject implements EtMessageInterface 
 	
 	public String processMessage(String msg) throws RemoteException {
 
-		System.out.println("Processing: [" + msg + "]");
+		// TODO: Ciphertext to plaintext here.
 		
-		// Ciphertext to plaintext here.
+		System.out.println("Processing: [" + msg + "]");
 		
 		// Split into 2 parts, using comma as the delimiter.
 		String[] part = msg.split(",", 2);
@@ -59,6 +59,7 @@ public class EtServer extends UnicastRemoteObject implements EtMessageInterface 
 		System.out.println("Part 0: [" + part[0] + "]");
 		System.out.println("Part 1: [" + part[1] + "]");
 		
+		// Now, re-compute the sha1 digest for a server side comparison.
 		String serverSideDigest = EtCrypto.sha1digest(part[1]);
 				
 		// If the digests don't compare, return.
@@ -67,6 +68,33 @@ public class EtServer extends UnicastRemoteObject implements EtMessageInterface 
 			// throw new RemoteException("this should never happen");
 			return "digest mis-compare";
 		}
+		
+		// Now, split part 1 into 2 pieces to isolate the request type.
+		part = part[1].split(",", 2);
+		
+		if (part[0].equals("ADMIN-CREATE-ADMIN-DB")) {
+			
+			System.out.println("In: [ADMIN-CREATE-ADMIN-DB]");
+			
+			try {
+				EtDatabase.createEtAdminDatabase(part[1]);
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+					
+		}
+		
+		if (part[0].equals("ADMIN-CREATE-ET-DB")) {
+			
+			
+		}
+		
+		if (part[0].equals("INSERT-EXPENSE")) {
+			
+			
+		}
+
 		
 		/*
 		

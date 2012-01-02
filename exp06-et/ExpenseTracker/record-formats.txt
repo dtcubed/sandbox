@@ -1,34 +1,45 @@
 Record format(s):
 
+-------------------------------
+CREATE ADMIN DB ("admin" request)
+-------------------------------
+OSD,RT,APW
+
+Where:
+------
+OSD   - Overall SHA digest for rest of record (probably start with SHA-1).
+RT    - Request type. In this case, ADMIN-CREATE-ADMIN-DB.
+APW   - Password for "admin" account (Note 1).
+
+Note 1 - all "passwords" stored as SHA-1 digest after entry.
+-------------------------------
+CREATE ET DB ("admin" request)
+-------------------------------
+OSD,RT,APW,ACCT
+
+Where:
+------
+OSD   - Overall SHA digest for rest of record (probably start with SHA-1).
+RT    - Request type. In this case, ADMIN-CREATE-ET-DB.
+APW   - Password for "admin" account (Note 1).
+ACCT  - Account to create new ET DB for.
+PW    - Password for the ACCT in question (Note 1).
+
+Note 1 - all "passwords" stored as SHA-1 digest after entry.
 ----------------
 INSERT expense
 ----------------
-OSD,IE,ACCT,SD,AMT,DI,CC,NOTE
+OSD,RT,ACCT,PW,AMT,DI,CC,NOTE
 
 Where:
 ------
-OSD  - overall SHA digest for rest of record (probably start with SHA-1)
-IE   - INSERT expense
-ACCT - account to INSERT
-SD   - SHA-1 digest (one-way password for ACCT)
-AMT  - amount (passes Data Checks)
-DI   - date expense was incurred (passes Data Checks)
-CC   - category code (passes Data Checks)
-NOTE - free form textual note (can't contain any delimiters)
+OSD  - Overall SHA digest for rest of record (probably start with SHA-1).
+RT   - Request type. In this case, INSERT-EXPENSE.
+ACCT - Account to INSERT expense into.
+PW   - Password for the ACCT in question (Note 1).
+AMT  - Amount (passes Data Checks).
+DI   - Date expense was incurred (passes Data Checks).
+CC   - Category code (passes Data Checks).
+NOTE - Free form textual note (can't contain any delimiters).
 
---------------------
-ADMIN create etdb
---------------------
-OSD,ADMIN,SD,CETDB,ACCT
-
-Where:
-------
-OSD   - overall SHA digest for rest of record (probably start with SHA-1)
-ADMIN - indicating an ADMIN (privileged command)
-SD    - SHA-1 digest (one-way password for "admin" ACCT)
-CETDB - create expense tracker database
-ACCT  - account create an expense tracker database for
-
-
-
-
+Note 1 - all "passwords" stored as SHA-1 digest after entry.

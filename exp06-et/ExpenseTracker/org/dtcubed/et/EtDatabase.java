@@ -37,24 +37,7 @@ public class EtDatabase {
 			statement.executeUpdate(sql);
 			
 			sql =  "INSERT INTO info VALUES(1, '" + adminPassword + "')";
-			
-			// sql =  "INSERT INTO info VALUES password_digest ('" + adminPassword + "')";
 			statement.executeUpdate(sql);
-			
-			
-			sql =  "INSERT INTO info VALUES(2, '" + adminPassword + "')";			
-			statement.executeUpdate(sql);
-			
-			sql =  "INSERT INTO info VALUES(3, '" + adminPassword + "')";			
-			statement.executeUpdate(sql);
-			
-			/*			
-			sql =  "INSERT INTO info VALUES password_digest ('02')";
-			statement.executeUpdate(sql);
-			
-			sql =  "INSERT INTO info VALUES password_digest ('03')";
-			statement.executeUpdate(sql);
-			*/
 
 		} catch (SQLException e) {
 			// if the error message is "out of memory",
@@ -125,7 +108,48 @@ public class EtDatabase {
 		}
 	}
 	
-	public static void createEtDatabaseOld() throws ClassNotFoundException {
+	public static String getAdminPassword() throws ClassNotFoundException {
+		
+		String connectString = "jdbc:sqlite:" + etdbsSubdir + "admin.db";
+		String adminPassword = "";
+			
+		// load the sqlite-JDBC driver using the current class loader
+		Class.forName("org.sqlite.JDBC");
+
+		Connection connection = null;
+		String sql = "SELECT password_digest FROM info WHERE id = '1'";
+		
+		try {
+			// create a database connection
+			connection = DriverManager.getConnection(connectString);
+			Statement statement = connection.createStatement();
+			statement.setQueryTimeout(30); // set timeout to 30 sec.
+			
+			
+			ResultSet rs = statement.executeQuery(sql);
+			while (rs.next()) {
+				adminPassword = rs.getString("password_digest");
+			}
+
+		} catch (SQLException e) {
+			// if the error message is "out of memory",
+			// it probably means no database file is found
+			System.err.println(e.getMessage());
+		} finally {
+			try {
+				if (connection != null)
+					connection.close();
+			} catch (SQLException e) {
+				// connection close failed.
+				System.err.println(e);
+			}
+		}
+		
+		return adminPassword;
+	}
+	
+	
+	public static void oldoldcreateEtDatabaseOld() throws ClassNotFoundException {
 		// load the sqlite-JDBC driver using the current class loader
 		Class.forName("org.sqlite.JDBC");
 

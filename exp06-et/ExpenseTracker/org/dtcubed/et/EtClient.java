@@ -28,9 +28,44 @@ public class EtClient {
 	private static String password = EtCrypto.sha1digest(System.getenv("ET_ACCOUNT_PASSWORD"));
 	
 	private static String adminPassword = EtCrypto.sha1digest(System.getenv("ET_ADMIN_PASSWORD"));
-	
+		
 	private static void createEtAdminDb(String adminPassword) {
+		
+		EtMessageInterface etRmiServer;
+		Registry registry;
+		
+		String msg = "";
+		String retStr = "";
+		String tempMsg = "ADMIN-CREATE-ADMIN-DB," + adminPassword;
+		
+		msg =  EtCrypto.sha1digest(tempMsg) + ",";
+		msg += tempMsg;
 
+		System.out.println("Sending : [" + msg + "]");
+
+		try {
+			// get the registry
+			registry = LocateRegistry.getRegistry(etServerIPAddress,
+					(new Integer(etServerPort)).intValue());
+			// look up the remote object
+			etRmiServer = (EtMessageInterface) (registry.lookup("rmiServer"));
+			// call the remote method
+			retStr = etRmiServer.processMessage(msg);
+			// print out the returned string
+			System.out.println("Received: [" + retStr + "]");
+		} 
+		catch (RemoteException e) {
+			e.printStackTrace();
+		} 
+		catch (NotBoundException e) {
+			e.printStackTrace();
+		}
+	}
+
+	
+	/*
+	private static void createEtAdminDb(String adminPassword) {
+		
 		EtMessageInterface etRmiServer;
 		Registry registry;
 
@@ -105,6 +140,7 @@ public class EtClient {
 			e.printStackTrace();
 		}
 	}
+	*/
 	
 	private static void printMenu() {
 
@@ -134,6 +170,7 @@ public class EtClient {
 
 	}
 	
+	/*
 	private static void stopServer() {
 
 		EtMessageInterface etRmiServer;
@@ -188,6 +225,7 @@ public class EtClient {
 			e.printStackTrace();
 		}
 	}
+	*/
 	/*
 	private static void zEncryptNote() {
 
@@ -297,10 +335,10 @@ public class EtClient {
 					createEtAdminDb(adminPassword);
 					break;
 				case '6':
-					createEtDb(account);
+					// createEtDb(account);
 					break;
 				case '7':
-					stopServer();
+					// stopServer();
 					break;
 				case '8':
 					System.out.print("Admin Password: ");
@@ -334,7 +372,7 @@ public class EtClient {
 					break;
 				case 's':
 				case 'S':
-					submitExpense();
+					// submitExpense();
 					break;
 				case 'z':
 				case 'Z':
