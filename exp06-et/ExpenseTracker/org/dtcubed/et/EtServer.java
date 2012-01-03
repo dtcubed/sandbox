@@ -26,6 +26,7 @@ public class EtServer extends UnicastRemoteObject implements EtMessageInterface 
 		}
 	}
 	
+	/*
 	public void createEtDb(String basename) throws RemoteException {
 		
 		try {
@@ -35,6 +36,7 @@ public class EtServer extends UnicastRemoteObject implements EtMessageInterface 
 			e.printStackTrace();
 		}
 	}
+	*/
 	
 	public String processCipherHex(String msg) throws RemoteException {
 		
@@ -70,7 +72,10 @@ public class EtServer extends UnicastRemoteObject implements EtMessageInterface 
 		}
 		
 		// Now, split part 1 into 2 pieces to isolate the request type.
-		part = part[1].split(",", 2);
+		// part = part[1].split(",", 2);
+		
+		// Now, split part 1 into its various pieces as delimited by ",".
+		part = part[1].split(",");
 		
 		if (part[0].equals("ADMIN-CREATE-ADMIN-DB")) {
 			
@@ -87,12 +92,78 @@ public class EtServer extends UnicastRemoteObject implements EtMessageInterface 
 		
 		if (part[0].equals("ADMIN-CREATE-ET-DB")) {
 			
+			System.out.println("In: [ADMIN-CREATE-ET-DB]");	
 			
+			System.out.println("Submitted AdminPW: [" + part[1] + "]");	
+			
+			String retrievedAdminPassword = "";
+			
+			try {
+				retrievedAdminPassword = EtDatabase.getAdminPassword();
+			}
+			catch (Exception e) {
+				;
+			}
+			System.out.println("Retrieved AdminPW: [" + retrievedAdminPassword + "]");	
+			
+			// If the retrieved "admin" password in the "admin" db doesn't equal the
+			// one passed in, return our error indicator.
+			if (!(retrievedAdminPassword.equals(part[1]))) {
+				
+				return "E";
+			}
+			
+			try {
+				EtDatabase.createEtDatabase(part[2], part[3]);
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return "E";
+			}
 		}
+		
+		if (part[0].equals("ADMIN-SHUTDOWN-SERVER")) {
+			
+			System.out.println("In: [ADMIN-SHUTDOWN-SERVER]");	
+			
+			System.out.println("Submitted AdminPW: [" + part[1] + "]");	
+			
+			String retrievedAdminPassword = "";
+			
+			try {
+				retrievedAdminPassword = EtDatabase.getAdminPassword();
+			}
+			catch (Exception e) {
+				;
+			}
+			System.out.println("Retrieved AdminPW: [" + retrievedAdminPassword + "]");	
+			
+			// If the retrieved "admin" password in the "admin" db doesn't equal the
+			// one passed in, return our error indicator.
+			if (!(retrievedAdminPassword.equals(part[1]))) {
+				
+				return "E";
+			}
+			
+			System.exit(0);
+		}
+			
+		// public static void insertExpense(String dbBasename, String dbPassword, String amt, String dateExpIncurred,
+	    //        String categoryCode, String note) throws ClassNotFoundException {
 		
 		if (part[0].equals("INSERT-EXPENSE")) {
 			
+			System.out.println("In: [INSERT-EXPENSE]");	
 			
+			try {
+				
+				EtDatabase.insertExpense(part[1], part[2], part[3], part[4], part[5], part[6]);
+				
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return "E";
+			}
 		}
 
 		

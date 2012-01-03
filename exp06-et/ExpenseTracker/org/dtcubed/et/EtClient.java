@@ -20,7 +20,7 @@ public class EtClient {
 	// "Uncategorized";
 	private static String categoryCode = "000000000000000"; 
 	// Format: YYYYMMDD
-	private static String dateIncurred = "20111230"; 	
+	private static String dateIncurred = "20120126"; 	
 	// Maximum of 255 characters. Dis-allow any downstream delimiters.
 	private static String note = "Maximum of 255 characters"; 
 	// SHA-2 Hash of cleartext.
@@ -61,7 +61,108 @@ public class EtClient {
 			e.printStackTrace();
 		}
 	}
+	
+	private static void createEtDb(String adminPassword, String dbBasename, String dbPassword) {
+		
+		EtMessageInterface etRmiServer;
+		Registry registry;
+		
+		String msg = "";
+		String retStr = "";
+		String tempMsg = "ADMIN-CREATE-ET-DB," + adminPassword + "," + dbBasename + "," + dbPassword;
+		
+		msg =  EtCrypto.sha1digest(tempMsg) + ",";
+		msg += tempMsg;
 
+		System.out.println("Sending : [" + msg + "]");
+
+		try {
+			// get the registry
+			registry = LocateRegistry.getRegistry(etServerIPAddress,
+					(new Integer(etServerPort)).intValue());
+			// look up the remote object
+			etRmiServer = (EtMessageInterface) (registry.lookup("rmiServer"));
+			// call the remote method
+			retStr = etRmiServer.processMessage(msg);
+			// print out the returned string
+			System.out.println("Received: [" + retStr + "]");
+		} 
+		catch (RemoteException e) {
+			e.printStackTrace();
+		} 
+		catch (NotBoundException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private static void shutdownServer(String adminPassword) {
+		
+		EtMessageInterface etRmiServer;
+		Registry registry;
+		
+		String msg = "";
+		String retStr = "";
+		String tempMsg = "ADMIN-SHUTDOWN-SERVER," + adminPassword;
+		
+		msg =  EtCrypto.sha1digest(tempMsg) + ",";
+		msg += tempMsg;
+
+		System.out.println("Sending : [" + msg + "]");
+
+		try {
+			// get the registry
+			registry = LocateRegistry.getRegistry(etServerIPAddress,
+					(new Integer(etServerPort)).intValue());
+			// look up the remote object
+			etRmiServer = (EtMessageInterface) (registry.lookup("rmiServer"));
+			// call the remote method
+			retStr = etRmiServer.processMessage(msg);
+			// print out the returned string
+			System.out.println("Received: [" + retStr + "]");
+		} 
+		catch (RemoteException e) {
+			e.printStackTrace();
+		} 
+		catch (NotBoundException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private static void submitExpense(String dbBasename, String dbPassword, 
+			                          String amt, String dateExpIncurred,
+			                          String categoryCode, String note) {
+		
+		EtMessageInterface etRmiServer;
+		Registry registry;
+		
+		String msg = "";
+		String retStr = "";
+		String tempMsg = "INSERT-EXPENSE," + dbBasename + "," + dbPassword + "," + amt + 
+		                 "," + dateExpIncurred + "," + categoryCode + "," + note;
+		
+		msg =  EtCrypto.sha1digest(tempMsg) + ",";
+		msg += tempMsg;
+
+		System.out.println("Sending : [" + msg + "]");
+
+		try {
+			// get the registry
+			registry = LocateRegistry.getRegistry(etServerIPAddress,
+					(new Integer(etServerPort)).intValue());
+			// look up the remote object
+			etRmiServer = (EtMessageInterface) (registry.lookup("rmiServer"));
+			// call the remote method
+			retStr = etRmiServer.processMessage(msg);
+			// print out the returned string
+			System.out.println("Received: [" + retStr + "]");
+		} 
+		catch (RemoteException e) {
+			e.printStackTrace();
+		} 
+		catch (NotBoundException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	/*
 	private static void createEtAdminDb(String adminPassword) {
@@ -335,10 +436,10 @@ public class EtClient {
 					createEtAdminDb(adminPassword);
 					break;
 				case '6':
-					// createEtDb(account);
+					createEtDb(adminPassword, account, password);
 					break;
 				case '7':
-					// stopServer();
+					shutdownServer(adminPassword);
 					break;
 				case '8':
 					System.out.print("Admin Password: ");
@@ -372,7 +473,7 @@ public class EtClient {
 					break;
 				case 's':
 				case 'S':
-					// submitExpense();
+					submitExpense(account, password, amount, dateIncurred, categoryCode, note);
 					break;
 				case 'z':
 				case 'Z':

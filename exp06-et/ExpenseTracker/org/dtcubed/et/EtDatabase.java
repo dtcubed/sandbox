@@ -54,18 +54,18 @@ public class EtDatabase {
 		}
 	}
 		
-	public static void createEtDatabase(String basename) throws ClassNotFoundException {
+	public static void createEtDatabase(String dbBasename, String dbPassword) throws ClassNotFoundException {
 		
 		// The "admin" database is special in our application. 
 		// Don't allow creation here.
-		if (basename.compareToIgnoreCase("admin") == 0) {
+		if (dbBasename.compareToIgnoreCase("admin") == 0) {
 			
 			String msg = "Can not deal with admin databases, returning now.";
 			System.out.println(msg);
 			return;
 		}
 		
-		String connectString = "jdbc:sqlite:" + etdbsSubdir + basename + ".db";
+		String connectString = "jdbc:sqlite:" + etdbsSubdir + dbBasename + ".db";
 			
 		// load the sqlite-JDBC driver using the current class loader
 		Class.forName("org.sqlite.JDBC");
@@ -84,13 +84,18 @@ public class EtDatabase {
 			
 			statement.executeUpdate(sql);
 			
+			/*
 			sql =  "CREATE TABLE expense ";		
 			sql += "(id INTEGER PRIMARY KEY AUTOINCREMENT, ";
 	        sql += "incurred_date TEXT NOT NULL, ";
 	        sql += "amount REAL NOT NULL, ";
 	        sql += "category_code TEXT NOT NULL, ";
 	        sql += "desc TEXT NOT NULL)";
-	        
+	        */
+			
+			sql =  "CREATE TABLE expense ";		
+	        sql += "(amount REAL NOT NULL)";
+        
 			statement.executeUpdate(sql);
 
 		} catch (SQLException e) {
@@ -148,6 +153,56 @@ public class EtDatabase {
 		return adminPassword;
 	}
 	
+	public static void insertExpense(String dbBasename, String dbPassword, String amt, String dateExpIncurred,
+            String categoryCode, String note) throws ClassNotFoundException {
+		
+		// The "admin" database is special in our application. 
+		// Don't allow creation here.
+		if (dbBasename.compareToIgnoreCase("admin") == 0) {
+			
+			String msg = "Can not deal with admin databases, returning now.";
+			System.out.println(msg);
+			return;
+		}
+		
+		String connectString = "jdbc:sqlite:" + etdbsSubdir + dbBasename + ".db";
+			
+		// load the sqlite-JDBC driver using the current class loader
+		Class.forName("org.sqlite.JDBC");
+
+		Connection connection = null;
+		String sql = "";
+		
+		// TODO: check that password is right.
+
+		// statement.executeUpdate("insert into expense values(1, '13.13')");
+		// statement.executeUpdate("insert into expense values(2, '14.14')");
+		
+		try {
+			// create a database connection
+			connection = DriverManager.getConnection(connectString);
+			Statement statement = connection.createStatement();
+			statement.setQueryTimeout(30); // set timeout to 30 sec.
+			
+			sql =  "INSERT INTO expense VALUES('" + amt + "')";		
+	        
+			statement.executeUpdate(sql);
+
+		} catch (SQLException e) {
+			// if the error message is "out of memory",
+			// it probably means no database file is found
+			System.err.println(e.getMessage());
+		} finally {
+			try {
+				if (connection != null)
+					connection.close();
+			} catch (SQLException e) {
+				// connection close failed.
+				System.err.println(e);
+			}
+		}
+	}
+
 	
 	public static void oldoldcreateEtDatabaseOld() throws ClassNotFoundException {
 		// load the sqlite-JDBC driver using the current class loader

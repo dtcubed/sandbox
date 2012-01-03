@@ -15,7 +15,7 @@ Note 1 - all "passwords" stored as SHA-1 digest after entry.
 -------------------------------
 CREATE ET DB ("admin" request)
 -------------------------------
-OSD,RT,APW,ACCT
+OSD,RT,APW,ACCT,PW
 
 Where:
 ------
@@ -27,7 +27,7 @@ PW    - Password for the ACCT in question (Note 1).
 
 Note 1 - all "passwords" stored as SHA-1 digest after entry.
 ----------------
-INSERT expense
+INSERT EXPENSE
 ----------------
 OSD,RT,ACCT,PW,AMT,DI,CC,NOTE
 
@@ -43,3 +43,18 @@ CC   - Category code (passes Data Checks).
 NOTE - Free form textual note (can't contain any delimiters).
 
 Note 1 - all "passwords" stored as SHA-1 digest after entry.
+-------------------------------
+SHUTDOWN SERVER ("admin" request)
+-------------------------------
+OSD,RT,APW,ACCT,PW
+
+Where:
+------
+OSD   - Overall SHA digest for rest of record (probably start with SHA-1).
+RT    - Request type. In this case, ADMIN-SHUTDOWN-SERVER.
+APW   - Password for "admin" account (Note 1).
+
+Note 1 - all "passwords" stored as SHA-1 digest after entry.
+
+
+
