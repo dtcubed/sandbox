@@ -1,0 +1,52 @@
+swagger: '2.0'
+info:
+  description: >-
+    This is a sample server.
+  version: 1.0.0
+  title: ET 
+  termsOfService: 'http://swagger.io/terms/'
+  contact:
+    email: apiteam@swagger.io
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+host: localhost
+basePath: /et
+tags:
+  - name: jobject 
+    description: JSON Object
+    externalDocs:
+      description: Find out more
+      url: 'http://swagger.io'
+schemes:
+  - http
+paths:
+  /jobject:
+    post:
+      tags:
+        - jobject
+      summary: Pass in object
+      description: Non Description
+      operationId: passObject 
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: JSON Object
+          required: true
+          schema:
+            $ref: '#/definitions/JOBject'
+      responses:
+        default:
+          description: successful operation
+definitions:
+  JOBject:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+externalDocs:
+  description: Find out more about Swagger
+  url: 'http://swagger.io'
