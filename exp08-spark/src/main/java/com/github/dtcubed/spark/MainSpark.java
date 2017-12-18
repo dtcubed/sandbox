@@ -30,7 +30,10 @@ public class MainSpark {
             return "Hello: " + request.params(":name");
         });
         post("/post/:name", (request, response) -> {
-            return "Hello POST: " + request.params(":name");
+            // return "Hello POST: " + request.params(":name");
+           // Works return "Request Body[: " + request.body() + "]";
+            response.status(401);
+            return request.body();
         });
 
         System.out.print("========================================\n");
