@@ -27,6 +27,7 @@ NOTE: The slf4j-nop was just added to eliminate SLF4J noise being emitted when j
 */
 
 dependencies {
+    compile 'com.h2database:h2:1.4.196'
     compile 'com.sparkjava:spark-core:2.7.1'
     compile 'org.json:json:20170516'
     compile 'org.slf4j:slf4j-simple:1.7.25'
