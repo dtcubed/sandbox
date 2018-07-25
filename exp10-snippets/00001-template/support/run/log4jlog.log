@@ -1,0 +1,15 @@
+[INFO ] 2018-07-24 20:24:08.326 [main]  - Configuration File Defined To Be :: support/xml/log4j2.xml
+[WARN ] 2018-07-24 20:24:08.329 [main]  - Configuration File Defined To Be :: support/xml/log4j2.xml
+[ERROR] 2018-07-24 20:24:08.330 [main]  - Configuration File Defined To Be :: support/xml/log4j2.xml
+[FATAL] 2018-07-24 20:24:08.330 [main]  - Configuration File Defined To Be :: support/xml/log4j2.xml
+[FATAL] 2018-07-24 20:24:08.330 [main]  - Another FATAL
+[INFO ] 2018-07-24 20:24:13.649 [main]  - Configuration File Defined To Be :: support/xml/log4j2.xml
+[WARN ] 2018-07-24 20:24:13.652 [main]  - Configuration File Defined To Be :: support/xml/log4j2.xml
+[ERROR] 2018-07-24 20:24:13.653 [main]  - Configuration File Defined To Be :: support/xml/log4j2.xml
+[FATAL] 2018-07-24 20:24:13.653 [main]  - Configuration File Defined To Be :: support/xml/log4j2.xml
+[FATAL] 2018-07-24 20:24:13.654 [main]  - Another FATAL
+[INFO ] 2018-07-24 20:24:17.104 [main]  - Configuration File Defined To Be :: support/xml/log4j2.xml
+[WARN ] 2018-07-24 20:24:17.108 [main]  - Configuration File Defined To Be :: support/xml/log4j2.xml
+[ERROR] 2018-07-24 20:24:17.109 [main]  - Configuration File Defined To Be :: support/xml/log4j2.xml
+[FATAL] 2018-07-24 20:24:17.109 [main]  - Configuration File Defined To Be :: support/xml/log4j2.xml
+[FATAL] 2018-07-24 20:24:17.109 [main]  - Another FATAL
