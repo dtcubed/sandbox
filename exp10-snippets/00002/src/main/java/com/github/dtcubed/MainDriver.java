@@ -1,40 +1,49 @@
 package com.github.dtcubed;
 
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import org.json.simple.JSONObject;
+
+import java.io.StringWriter;
 
 public class MainDriver {
 
     /*
-    System.setProperty( "log4j.configurationFile", "support/xml/log4j2.xml" );
     private static final Logger logger = LogManager.getLogger(MainDriver.class);
     */
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Throwable {
 
         /*
          https://stackoverflow.com/questions/6736235/set-java-system-properties-with-a-configuration-file
          The System property (below) has to be set before log4j2 knows how to find its configuration file.
         */
-
         System.setProperty( "log4j.configurationFile", "support/xml/log4j2.xml" );
         Logger logger = LogManager.getRootLogger();
-
-        logger.trace("Configuration File Defined To Be :: "+System.getProperty("log4j.configurationFile"));
-
-        logger.debug("Configuration File Defined To Be :: "+System.getProperty("log4j.configurationFile"));
-
         logger.info("Configuration File Defined To Be :: "+System.getProperty("log4j.configurationFile"));
 
-        logger.warn("Configuration File Defined To Be :: "+System.getProperty("log4j.configurationFile"));
 
-        logger.error("Configuration File Defined To Be :: "+System.getProperty("log4j.configurationFile"));
+        /*
+         Example code started from:
+         https://www.tutorialspoint.com/json/json_java_example.htm
+        */
 
-        logger.fatal("Configuration File Defined To Be :: "+System.getProperty("log4j.configurationFile"));
+        JSONObject obj = new JSONObject();
 
-        logger.fatal("Another FATAL");
+        obj.put("name","foo");
+        obj.put("num",new Integer(100));
+        obj.put("balance",new Double(1000.21));
+        obj.put("is_vip",new Boolean(true));
 
-        System.out.println("hello world");
+        StringWriter out = new StringWriter();
+        obj.writeJSONString(out);
+
+        String jsonText = out.toString();
+        //System.out.print(jsonText);
+        logger.info("JSON Text: [" + jsonText + "]");
+
 
     }
 }

@@ -34,8 +34,13 @@ dependencies {
     compile 'org.apache.logging.log4j:log4j:2.8.2'
     compile 'org.apache.logging.log4j:log4j-bom:2.8.2'
     compile 'org.apache.logging.log4j:log4j-core-its:2.8.2'
-    compile 'org.json:json:20170516'
+    compile 'com.googlecode.json-simple:json-simple:1.1.1'
 }
+
+/*
+    compile 'org.json:json:20170516'
+    compile 'com.github.cliftonlabs:json-simple:3.0.2'
+*/
 
 jar {
   manifest {
