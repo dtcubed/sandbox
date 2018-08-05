@@ -26,7 +26,8 @@
 ### Work around https://youtrack.jetbrains.com/issue/IDEA-116898
 # gradle/wrapper/gradle-wrapper.properties
 
-### Ignore the dynamically created directories created while running the framework
-support/run/20*
+### Ignore anything in the run directory
+support/run/*
+
 
 # End of https://www.gitignore.io/api/java,gradle
