@@ -34,7 +34,7 @@ public class MainDriver {
 
         logger.fatal("Another FATAL");
 
-        System.out.println("hello world");
+        System.out.println("hello world xxxx");
 
     }
 }

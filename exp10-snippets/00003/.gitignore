@@ -12,6 +12,7 @@
 
 ### Idea -- IntelliJ ###
 .idea
+*.iml
 
 ### Gradle ###
 .gradle
