@@ -1,0 +1,32 @@
+# The skeleton of this file originally came from:
+# https://medium.com/@petehouston/typical-gitignore-for-a-gradle-java-project-52cbe079a99c
+# Created by https://www.gitignore.io/api/java,gradle
+
+### Java ###
+*.class
+
+### Package Files ###
+*.jar
+*.war
+*.ear
+
+### Idea -- IntelliJ ###
+.idea
+
+### Gradle ###
+.gradle
+/build/
+
+### Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
+!gradle-wrapper.jar
+
+# Cache of project
+#.gradletasknamecache
+
+### Work around https://youtrack.jetbrains.com/issue/IDEA-116898
+# gradle/wrapper/gradle-wrapper.properties
+
+### Ignore the dynamically created directories created while running the framework
+support/run/20*
+
+# End of https://www.gitignore.io/api/java,gradle
