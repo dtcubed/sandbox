@@ -35,6 +35,7 @@ dependencies {
     compile 'org.apache.logging.log4j:log4j-bom:2.8.2'
     compile 'org.apache.logging.log4j:log4j-core-its:2.8.2'
     compile 'org.json:json:20170516'
+    compile 'commons-codec:commons-codec:1.11'
 }
 
 jar {

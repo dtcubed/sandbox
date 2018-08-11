@@ -1,7 +1,7 @@
 package com.github.dtcubed;
 
 /*
-SNIPPET: Illustrates AES Encryption/Decryption of JSON things.
+SNIPPET: Illustrates AES Symmetric Encryption/Decryption of JSON things.
 */
 /*
   We are using the examples illustrated here:
