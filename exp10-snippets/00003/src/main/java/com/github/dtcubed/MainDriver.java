@@ -83,7 +83,7 @@ public class MainDriver {
             System.out.println("Create a file text.txt under folder support/run");
         }
 
-        System.out.println("END OF SNIPPET 00003");
+        System.out.println("END OF 00003");
 
     }
 }
