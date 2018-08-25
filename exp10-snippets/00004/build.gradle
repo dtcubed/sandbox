@@ -30,12 +30,14 @@ https://medium.com/@petehouston/compile-local-jar-files-with-gradle-a078e5c7a520
 */
 
 dependencies {
-    compile 'org.apache.commons:commons-io:1.3.2'
+    compile 'com.h2database:h2:1.4.197'
+    compile 'com.sparkjava:spark-core:2.7.2'
     compile 'org.apache.logging.log4j:log4j:2.8.2'
     compile 'org.apache.logging.log4j:log4j-bom:2.8.2'
     compile 'org.apache.logging.log4j:log4j-core-its:2.8.2'
-    compile 'org.json:json:20170516'
+    compile 'org.json:json:20180813'
 }
+
 
 jar {
   manifest {
